@@ -1,20 +1,21 @@
-pipeline{
-    agent any
+pipeline {
+  agent any
 
-    options {
-        buildDiscarder(logRotator(numToKeepStr:'2', artifactsNumToKeepStr:'1'))
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '2', artifactNumToKeepStr: '1'))
+  }
+
+  stages {
+    stage('build') {
+      steps {
+        sh 'ant -f build.xml -v'
+      }
     }
-    stages{
-        stage('build'){
-            steps{
-                sh 'ant -f build.xml -v'
-            }
-        }
+  }
+
+  post {
+    always {
+      archiveArtifacts artifacts: 'dist/*.jar', fingerprint: true
     }
-    post
-    {
-        always{
-             artifacts: 'dist/*.jar', fingerprint: true
-        }
-    }
+  }
 }
