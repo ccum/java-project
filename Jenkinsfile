@@ -63,7 +63,9 @@ pipeline {
       when {
         branch  'devlopment'
       }
-      steps{
+      steps
+      sshagent(['68a87d5512ca05e5b5005efbd907a0bbe066dfed'])
+      {
         echo "Stashing any local changes"
         sh "git stash"
         echo "checnking out devlopment branch"
