@@ -40,7 +40,7 @@ pipeline {
     }
     stage ('Run on Debian') {
       agent{
-        docker 'openjdk:8u151-jdk-nanoserver-sac2016'
+        docker 'openjdk:8u151-jre'
       }
       steps {
         sh "wget http://ubuntu17.westus2.cloudapp.azure.com:8080/rectangles/all/rectangle_${env.BUILD_NUMBER}.jar"
