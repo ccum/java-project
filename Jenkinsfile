@@ -38,6 +38,16 @@ pipeline {
       }
 
     }
+    stage ('Run on Debian') {
+      agent{
+        docker 'openjdk:8-jdk-nanoserver'
+      }
+      steps {
+        sh "wget http://ubuntu17.westus2.cloudapp.azure.com:8080/rectangles/all/rectangle_${env.BUILD_NUMBER}.jar"
+        sh "java -jar rectangle_${env.BUILD_NUMBER}.jar 3 4"
+      }
+
+    }
 
   }
 }
