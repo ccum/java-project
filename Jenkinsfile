@@ -16,6 +16,11 @@ pipeline {
       steps {
         sh 'ant -f build.xml -v'
       }
+    }   
+    stage('Deploy'){
+      steps{
+        sh "cp /dist/rectangle_${env.BUILD.NUMBER}.jar /var/www/html/rectangles/all/" 
+      }
     }
   }
 
