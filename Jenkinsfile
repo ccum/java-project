@@ -27,13 +27,14 @@ pipeline {
     stage('Deploy'){
       agent any
       steps{
-        sh "cp dist/rectangle_${env.BUILD_NUMBER}.jar /var/www/html/rectangles/all/" 
+        sh "mkdir /var/www/html/rectangles/all/${env.BRANCH_NAME}"
+        sh "cp dist/rectangle_${env.BUILD_NUMBER}.jar /var/www/html/rectangles/all/${env.BRANCH_NAME}/" 
       }
     }
     stage('Running on ubuntu local'){
       agent any
       steps{
-        sh "wget http://ubuntu17.westus2.cloudapp.azure.com:8080/rectangles/all/rectangle_${env.BUILD_NUMBER}.jar"
+        sh "wget http://ubuntu17.westus2.cloudapp.azure.com:8080/rectangles/all/${env.BRANCH_NAME}/rectangle_${env.BUILD_NUMBER}.jar"
         sh "java -jar rectangle_${env.BUILD_NUMBER}.jar 3 4"
       }
 
@@ -43,7 +44,7 @@ pipeline {
         docker 'openjdk:8u151-jre'
       }
       steps {
-        sh "wget http://ubuntu17.westus2.cloudapp.azure.com:8080/rectangles/all/rectangle_${env.BUILD_NUMBER}.jar"
+        sh "wget http://ubuntu17.westus2.cloudapp.azure.com:8080/rectangles/all/${env.BRANCH_NAME}/rectangle_${env.BUILD_NUMBER}.jar"
         sh "java -jar rectangle_${env.BUILD_NUMBER}.jar 3 4"
       }
 
@@ -51,11 +52,31 @@ pipeline {
     stage ('Promote to Green') {
       agent any
       when {
-        branch 'devlopment'
+        branch 'master'
       }
       steps {
-        sh "cp /var/www/html/rectangles/all/rectangle_${env.BUILD_NUMBER}.jar /var/www/html/rectangles/green/rectangle_${env.BUILD_NUMBER}.jar"
+        sh "cp /var/www/html/rectangles/all/${env.BRANCH_NAME}/rectangle_${env.BUILD_NUMBER}.jar /var/www/html/rectangles/green/rectangle_${env.BUILD_NUMBER}.jar"
       }
+    }
+    stage ('Promete development branch to master'){
+      agent any
+      when {
+        branch  'devlopment'
+      }
+      steps{
+        echo "Stashing any local changes"
+        sh "git stash"
+        echo "checnking out devlopment branch"
+        sh "git checkout devlopment"
+        echo "checnking out master branch"
+        sh "git checkout devlopment"
+        echo "Mergind devlopment into master branch"
+        sh "git merge development"
+        echo "pushing to origin master"
+        sh "git push origin master"
+
+      }
+
     }
 
   }
