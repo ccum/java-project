@@ -48,7 +48,7 @@ pipeline {
       }
       steps {
         sh "wget http://ubuntu17.westus2.cloudapp.azure.com:8080/rectangles/all/${env.BRANCH_NAME}/rectangle_${env.MAJOR_VERSION}.${env.BUILD_NUMBER}.jar"
-        sh "java -jar rrectangle_${env.MAJOR_VERSION}.${env.BUILD_NUMBER}.jar 3 4"
+        sh "java -jar rectangle_${env.MAJOR_VERSION}.${env.BUILD_NUMBER}.jar 3 4"
       }
 
     }
