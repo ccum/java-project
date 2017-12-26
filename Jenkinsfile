@@ -4,7 +4,7 @@ pipeline {
   options {
     buildDiscarder(logRotator(numToKeepStr: '2', artifactNumToKeepStr: '1'))
   }
-  enviroment{
+  environment{
     MAJOR_VERSION = 1
   }
 
